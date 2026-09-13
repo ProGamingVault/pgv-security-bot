@@ -68,9 +68,11 @@ client.on('messageCreate', async message => {
 
                 const lowerText = text.toLowerCase();
                 
-                // Strict validation: Must contain BOTH your unique handle/name AND subscription indicator
+                // ULTRA-STRICT VALIDATION:
+                // 1. Must contain the exact channel handle or exact channel title keywords.
+                // 2. Must contain 'subscribed' (to ensure they actually clicked subscribe, blocking search-bar bypasses).
                 const hasCorrectChannel = lowerText.includes(CHANNEL_HANDLE) || lowerText.includes(CHANNEL_NAME_KEYWORD);
-                const hasSubscribed = lowerText.includes('subscribe') || lowerText.includes('subscribed');
+                const hasSubscribed = lowerText.includes('subscribed');
 
                 if (hasCorrectChannel && hasSubscribed) {
                     const member = await message.guild.members.fetch(message.author.id);
