@@ -17,7 +17,10 @@ const VERIFY_CHANNEL_ID = '1548470100263436328';
 const LOG_CHANNEL_ID = '1548472408044867634';
 const VERIFIED_ROLE_ID = '1548468211807162488';
 const CHANNEL_URL = 'https://www.youtube.com/@ProGamingVault-e2k';
+
+// Strict unique identifiers for your channel
 const CHANNEL_NAME_KEYWORD = 'pro gaming vault';
+const CHANNEL_HANDLE = 'progamingvault-e2k';
 
 client.once('ready', () => {
     console.log(`PGV Automated Security Bot logged in as ${client.user.tag}!`);
@@ -50,12 +53,12 @@ client.on('messageCreate', async message => {
         }
     }
 
-    // 2. Automated 24/7 OCR Screenshot Verification Gate
+    // 2. Automated 24/7 Strict OCR Screenshot Verification Gate
     if (message.channel.id === VERIFY_CHANNEL_ID) {
         if (message.attachments.size > 0) {
             const attachment = message.attachments.first();
             
-            const processingMsg = await message.reply('🔄 Scanning your screenshot via 24/7 AI Security... Please wait.');
+            const processingMsg = await message.reply('🔄 Scanning your screenshot via strict 24/7 AI Security... Please wait.');
 
             try {
                 // Download and run OCR on the image
@@ -65,11 +68,11 @@ client.on('messageCreate', async message => {
 
                 const lowerText = text.toLowerCase();
                 
-                // Strict validation: Must contain channel keyword and subscription indicator
-                const hasChannel = lowerText.includes(CHANNEL_NAME_KEYWORD);
+                // Strict validation: Must contain BOTH your unique handle/name AND subscription indicator
+                const hasCorrectChannel = lowerText.includes(CHANNEL_HANDLE) || lowerText.includes(CHANNEL_NAME_KEYWORD);
                 const hasSubscribed = lowerText.includes('subscribe') || lowerText.includes('subscribed');
 
-                if (hasChannel && hasSubscribed) {
+                if (hasCorrectChannel && hasSubscribed) {
                     const member = await message.guild.members.fetch(message.author.id);
                     await member.roles.add(VERIFIED_ROLE_ID);
 
@@ -90,4 +93,4 @@ client.on('messageCreate', async message => {
     }
 });
 
-client.login(TOKEN);
+client.login(process.env.DISCORD_TOKEN);
