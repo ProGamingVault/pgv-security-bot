@@ -18,8 +18,7 @@ const LOG_CHANNEL_ID = '1548472408044867634';
 const VERIFIED_ROLE_ID = '1548468211807162488';
 const CHANNEL_URL = 'https://www.youtube.com/@ProGamingVault-e2k';
 
-// Strict unique identifiers for your channel
-const CHANNEL_NAME_KEYWORD = 'pro gaming vault';
+// Strict unique identifier for your channel (Handle only to prevent fake name channels)
 const CHANNEL_HANDLE = 'progamingvault-e2k';
 
 client.once('ready', () => {
@@ -68,13 +67,13 @@ client.on('messageCreate', async message => {
 
                 const lowerText = text.toLowerCase();
                 
-                // ULTRA-STRICT VALIDATION:
-                // 1. Must contain the exact channel handle or exact channel title keywords.
-                // 2. Must contain 'subscribed' (to ensure they actually clicked subscribe, blocking search-bar bypasses).
-                const hasCorrectChannel = lowerText.includes(CHANNEL_HANDLE) || lowerText.includes(CHANNEL_NAME_KEYWORD);
+                // ULTIMATE STRICT VALIDATION:
+                // Must contain the EXACT handle (@progamingvault-e2k) AND 'subscribed'.
+                // Name keywords are completely ignored to block fake channels copying your name.
+                const hasCorrectHandle = lowerText.includes(CHANNEL_HANDLE);
                 const hasSubscribed = lowerText.includes('subscribed');
 
-                if (hasCorrectChannel && hasSubscribed) {
+                if (hasCorrectHandle && hasSubscribed) {
                     const member = await message.guild.members.fetch(message.author.id);
                     await member.roles.add(VERIFIED_ROLE_ID);
 
