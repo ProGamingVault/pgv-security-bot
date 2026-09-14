@@ -27,32 +27,25 @@ const CHANNEL_HANDLE = 'progamingvault-e2k';
 client.once('ready', async () => {
     console.log(`PGV Automated Security Bot logged in as ${client.user.tag}!`);
 
-    // Auto-send & Pin Guidance Message in Verify Channel
+    // Auto-send Guidance Message in Verify Channel
     try {
         const verifyChannel = await client.channels.fetch(VERIFY_CHANNEL_ID);
         if (verifyChannel) {
-            // Check if guidance message already exists to avoid spamming on restart
-            const messages = await verifyChannel.messages.fetch({ limit: 10 });
-            const existingGuide = messages.find(m => m.author.id === client.user.id && m.embeds.length > 0);
+            const guideEmbed = new EmbedBuilder()
+                .setColor('#0099ff')
+                .setTitle('🛡️ Pro Gaming Vault - Official Verification Guide')
+                .setDescription(`Welcome to the server! To unlock the script portal channels and access our daily releases, you must verify your subscription to our official channel.\n\n**📋 Steps to Verify:**\n1. Go to our official channel: [Click Here to Open Channel](${CHANNEL_URL})\n2. Click **Subscribe**.\n3. Click the **Bell Icon** and select **"All"** (as shown in the example below).\n4. Take a clear screenshot showing your handle (\`@progamingvault-e2k\`), **Subscribed** status, and the **All** dropdown menu.\n5. Drop your screenshot right here in this channel!`)
+                .setImage('https://cdn.discordapp.com/attachments/1537214914844688425/1548839495166861434/WhatsApp_Image_2026-09-13_at_4.30.08_PM.jpeg?ex=6aa884af&is=6aa7332f&hm=02a68f65eb1466d374e64d93a02e7d58c7c66c501c21fdcfbb4c16e7bf043a70') 
+                .setFooter({ text: 'Our 24/7 AI Security Bot will automatically verify and grant your role within seconds!' });
 
-            if (!existingGuide) {
-                const guideEmbed = new EmbedBuilder()
-                    .setColor('#0099ff')
-                    .setTitle('🛡️ Pro Gaming Vault - Official Verification Guide')
-                    .setDescription(`Welcome to the server! To unlock the script portal channels and access our daily releases, you must verify your subscription to our official channel.\n\n**📋 Steps to Verify:**\n1. Go to our official channel: [Click Here to Open Channel](${CHANNEL_URL})\n2. Click **Subscribe**.\n3. Click the **Bell Icon** and select **"All"** (as shown in the example below).\n4. Take a clear screenshot showing your handle (\`@progamingvault-e2k\`), **Subscribed** status, and the **All** dropdown menu.\n5. Drop your screenshot right here in this channel!`)
-                    .setImage('https://cdn.discordapp.com/attachments/1537214914844688425/1548839495166861434/WhatsApp_Image_2026-09-13_at_4.30.08_PM.jpeg?ex=6aa884af&is=6aa7332f&hm=02a68f65eb1466d374e64d93a02e7d58c7c66c501c21fdcfbb4c16e7bf043a70') 
-                    .setFooter({ text: 'Our 24/7 AI Security Bot will automatically verify and grant your role within seconds!' });
-
-                const sentMsg = await verifyChannel.send({ embeds: [guideEmbed] });
-                await sentMsg.pin().catch(() => {});
-                console.log('Verification guidance message sent and pinned successfully!');
-            }
+            const sentMsg = await verifyChannel.send({ embeds: [guideEmbed] });
+            await sentMsg.pin().catch(() => {});
+            console.log('Verification guidance message sent and pinned successfully!');
         }
     } catch (error) {
         console.error('Failed to send auto-guidance message:', error);
     }
 });
-
 // Localization Helper for Error / Guide Messages based on locale
 function getLocalizedGuidance(locale = 'en') {
     if (locale.startsWith('id') || locale.startsWith('ms')) {
