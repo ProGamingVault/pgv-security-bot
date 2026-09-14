@@ -56,12 +56,12 @@ client.on('messageCreate', async message => {
         }
     }
 
-    // 2. Automated 24/7 OCR Screenshot Verification Gate (Secure + Mobile Friendly)
+    // 2. Automated 24/7 OCR Screenshot Verification Gate (Super-Smart & Flexible for Mobile)
     if (message.channel.id === VERIFY_CHANNEL_ID) {
         if (message.attachments.size > 0) {
             const attachment = message.attachments.first();
             
-            const processingMsg = await message.reply('🔄 Scanning your screenshot via 24/7 AI Security (Checking Channel & Bell All)... Please wait.');
+            const processingMsg = await message.reply('🔄 Scanning your screenshot via 24/7 AI Security (Smart Mobile Scan)... Please wait.');
 
             try {
                 // Download and run OCR on the image
@@ -71,12 +71,12 @@ client.on('messageCreate', async message => {
 
                 const lowerText = text.toLowerCase();
                 
-                // Smart Secure Validation:
-                // Checks for your channel handle/name AND the bell 'All' menu (Ignoring blurred background 'subscribed' text)
-                const hasCorrectChannel = lowerText.includes('progamingvault') || lowerText.includes('e2k');
-                const hasBellAll = lowerText.includes('all');
+                // Super-Smart Flexible Validation for Mobile Blur:
+                // Checks for partial channel match AND YouTube notification menu keywords
+                const hasChannelIdentifier = lowerText.includes('progaming') || lowerText.includes('vault') || lowerText.includes('e2k');
+                const hasNotificationMenu = lowerText.includes('all') && (lowerText.includes('personalised') || lowerText.includes('unsubscribe') || lowerText.includes('notifications') || lowerText.includes('choose'));
 
-                if (hasCorrectChannel && hasBellAll) {
+                if (hasChannelIdentifier && hasNotificationMenu) {
                     const member = await message.guild.members.fetch(message.author.id);
                     await member.roles.add(VERIFIED_ROLE_ID);
 
@@ -84,7 +84,7 @@ client.on('messageCreate', async message => {
                     
                     await member.send(`🎉 Your subscription and notification settings for **Pro Gaming Vault** have been automatically verified! You can now access daily scripts here: ${ROBLOX_SCRIPTS_INVITE}`).catch(() => {});
                 } else {
-                    await processingMsg.edit(`❌ Verification Failed! Please ensure your screenshot shows **our channel (@ProGamingVault-e2k)** along with the open **All** notification bell menu.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
+                    await processingMsg.edit(`❌ Verification Failed! Please ensure your screenshot shows **our channel header (@ProGamingVault-e2k)** along with the open **All** notification bell menu.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
                 }
 
             } catch (err) {
