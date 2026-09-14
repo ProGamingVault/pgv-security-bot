@@ -22,24 +22,8 @@ const ROBLOX_SCRIPTS_INVITE = 'https://discord.gg/g73GzpTJQj';
 client.on('clientReady', async () => {
     console.log(`PGV Automated Security Bot logged in as ${client.user.tag}!`);
 
-    // Auto-send Guidance Message in Verify Channel
-    try {
-        const verifyChannel = await client.channels.fetch(VERIFY_CHANNEL_ID);
-        if (verifyChannel) {
-            const guideEmbed = new EmbedBuilder()
-                .setColor('#0099ff')
-                .setTitle('🛡️ Pro Gaming Vault - Official Verification Guide')
-                .setDescription(`Welcome to the server! To unlock the script portal channels and access our daily releases, you must verify your subscription to our official channel.\n\n**📋 Steps to Verify:**\n1. Go to our official channel: [Click Here to Open Channel](${CHANNEL_URL})\n2. Click **Subscribe**.\n3. Click the **Bell Icon** and select **"All"**.\n4. Take a clear screenshot showing the open **All** notification bell dropdown menu.\n5. Drop your screenshot right here in this channel!`)
-                .setImage('https://cdn.discordapp.com/attachments/1537214914844688425/1548839495166861434/WhatsApp_Image_2026-09-13_at_4.30.08_PM.jpeg?ex=6aa884af&is=6aa7332f&hm=02a68f65eb1466d374e64d93a02e7d58c7c66c501c21fdcfbb4c16e7bf043a70') 
-                .setFooter({ text: 'Our 24/7 AI Security Bot will automatically verify and grant your role within seconds!' });
-
-            const sentMsg = await verifyChannel.send({ embeds: [guideEmbed] });
-            await sentMsg.pin().catch(() => {});
-            console.log('Verification guidance message sent and pinned successfully!');
-        }
-    } catch (error) {
-        console.error('Failed to send auto-guidance message:', error);
-    }
+    // (Optional) Aap yahan apna manual pinned message bhi code ke zariye bhejwa sakte hain 
+    // ya phir channel par khud manually pin kar sakte hain.
 });
 
 client.on('messageCreate', async message => {
@@ -56,12 +40,12 @@ client.on('messageCreate', async message => {
         }
     }
 
-    // 2. Automated 24/7 OCR Screenshot Verification Gate (Bulletproof & Fast)
+    // 2. Automated 24/7 OCR Screenshot Verification (Handle + Subscribed)
     if (message.channel.id === VERIFY_CHANNEL_ID) {
         if (message.attachments.size > 0) {
             const attachment = message.attachments.first();
             
-            const processingMsg = await message.reply('🔄 Scanning your screenshot via 24/7 AI Security... Please wait.');
+            const processingMsg = await message.reply('🔄 Scanning your screenshot... Please wait.');
 
             try {
                 // Download and run OCR on the image
@@ -71,24 +55,25 @@ client.on('messageCreate', async message => {
 
                 const lowerText = text.toLowerCase();
                 
-                // Bulletproof Flexible Validation for Mobile & Desktop Screenshots:
-                // Checks if the YouTube notification bell menu options are present in the image text
-                const hasNotificationMenu = lowerText.includes('all') || lowerText.includes('notifications') || lowerText.includes('personalised') || lowerText.includes('unsubscribe');
+                // Check for channel handle AND "subscribed" status
+                const isValidChannel = lowerText.includes('progamingvault') || lowerText.includes('e2k') || (lowerText.includes('progaming') && lowerText.includes('vault'));
+                const isSubscribed = lowerText.includes('subscribed') || lowerText.includes('subbed');
 
-                if (hasNotificationMenu) {
+                if (isValidChannel && isSubscribed) {
                     const member = await message.guild.members.fetch(message.author.id);
                     await member.roles.add(VERIFIED_ROLE_ID);
 
-                    await processingMsg.edit(`🎉 **Verification Successful!** Welcome to Pro Gaming Vault. Thank you for subscribing and setting notifications to All. Your portal access is now unlocked!\n\n🚀 Head over to the **#roblox-scripts** channel to get your daily working scripts: ${ROBLOX_SCRIPTS_INVITE}`);
+                    await processingMsg.edit(`🎉 **Verification Successful!** Welcome to Pro Gaming Vault. Your portal access is now unlocked!\n\n🚀 Head over to the **#roblox-scripts** channel to get your daily working scripts: ${ROBLOX_SCRIPTS_INVITE}`);
                     
-                    await member.send(`🎉 Your subscription and notification settings for **Pro Gaming Vault** have been automatically verified! You can now access daily scripts here: ${ROBLOX_SCRIPTS_INVITE}`).catch(() => {});
+                    await member.send(`🎉 Your subscription to **Pro Gaming Vault** has been verified! Access your scripts here: ${ROBLOX_SCRIPTS_INVITE}`).catch(() => {});
                 } else {
-                    await processingMsg.edit(`❌ Verification Failed! Please ensure your screenshot clearly shows the open notification bell menu with **All** selected.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
+                    // Clean and precise error message focusing purely on channel subscription
+                    await processingMsg.edit(`❌ **Verification Failed!** Please make sure you are subscribed to our official channel and your screenshot clearly shows the **Subscribed** button along with our handle (**@ProGamingVault-e2k**).\n\n🔗 **Channel Link:** ${CHANNEL_URL}`);
                 }
 
             } catch (err) {
                 console.error('OCR Processing Error:', err);
-                await processingMsg.edit(`❌ An error occurred while processing your image. Please ensure it's a clear screenshot of your notification settings and try again.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
+                await processingMsg.edit(`❌ An error occurred while processing your image. Please ensure it's a clear screenshot and try again.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
             }
         }
     }
