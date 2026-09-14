@@ -34,7 +34,7 @@ client.once('ready', async () => {
             const guideEmbed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('🛡️ Pro Gaming Vault - Official Verification Guide')
-                .setDescription(`Welcome to the server! To unlock the script portal channels and access our daily releases, you must verify your subscription to our official channel.\n\n**📋 Steps to Verify:**\n1. Go to our official channel: [Click Here to Open Channel](${CHANNEL_URL})\n2. Click **Subscribe**.\n3. Click the **Bell Icon** and select **"All"** (as shown in the example below).\n4. Take a clear screenshot showing your handle (\`@progamingvault-e2k\`), **Subscribed** status, and the **All** dropdown menu.\n5. Drop your screenshot right here in this channel!`)
+                .setDescription(`Welcome to the server! To unlock the script portal channels and access our daily releases, you must verify your subscription to our official channel.\n\n**📋 Steps to Verify:**\n1. Go to our official channel: [Click Here to Open Channel](${CHANNEL_URL})\n2. Click **Subscribe**.\n3. Click the **Bell Icon** and select **"All"**.\n4. **Important:** Take a clear screenshot showing **BOTH** your channel handle (\`@progamingvault-e2k\`) **AND** the open **All** notification bell dropdown menu **together in one single image** (zoom out or scroll slightly if needed).\n5. Drop your screenshot right here in this channel!`)
                 .setImage('https://cdn.discordapp.com/attachments/1537214914844688425/1548839495166861434/WhatsApp_Image_2026-09-13_at_4.30.08_PM.jpeg?ex=6aa884af&is=6aa7332f&hm=02a68f65eb1466d374e64d93a02e7d58c7c66c501c21fdcfbb4c16e7bf043a70') 
                 .setFooter({ text: 'Our 24/7 AI Security Bot will automatically verify and grant your role within seconds!' });
 
@@ -46,16 +46,17 @@ client.once('ready', async () => {
         console.error('Failed to send auto-guidance message:', error);
     }
 });
+
 // Localization Helper for Error / Guide Messages based on locale
 function getLocalizedGuidance(locale = 'en') {
     if (locale.startsWith('id') || locale.startsWith('ms')) {
-        return `❌ Verifikasi Gagal! Pastikan screenshot Anda menampilkan handle resmi kami, status Subscribed, dan menu lonceng diatur ke **All**.\n🔗 **Link Channel:** ${CHANNEL_URL}`;
+        return `❌ Verifikasi Gagal! Pastikan screenshot Anda menampilkan **handle (@progamingvault-e2k)** DAN **menu lonceng (All)** secara bersamaan dalam **1 screenshot yang sama**.\n🔗 **Link Channel:** ${CHANNEL_URL}`;
     } else if (locale.startsWith('es')) {
-        return `❌ ¡Verificación fallida! Asegúrate de que tu captura muestre nuestro enlace oficial, el estado Subscribed y la campanita en **All**.\n🔗 **Enlace del canal:** ${CHANNEL_URL}`;
+        return `❌ ¡Verificación fallida! Tu captura debe mostrar **ambos**: el enlace (@progamingvault-e2k) y el menú de notificaciones (All) **en una sola imagen**.\n🔗 **Enlace del canal:** ${CHANNEL_URL}`;
     } else if (locale.startsWith('pt')) {
-        return `❌ Falha na verificação! Certifique-se de que sua captura exiba nosso canal oficial, o status Subscribed e o sininho em **All**.\n🔗 **Link do canal:** ${CHANNEL_URL}`;
+        return `❌ Falha na verificação! Certifique-se de que sua captura exiba **ambos**: o handle (@progamingvault-e2k) e o sininho (All) **na mesma imagem**.\n🔗 **Link do canal:** ${CHANNEL_URL}`;
     } else {
-        return `❌ Verification Failed! Please make sure your screenshot clearly shows our channel handle (\`@progamingvault-e2k\`), **Subscribed** status, and the notification bell dropdown set to **All**.\n🔗 **Channel Link:** ${CHANNEL_URL}`;
+        return `❌ Verification Failed! Your screenshot must clearly show **BOTH** your channel handle (\`@progamingvault-e2k\`) **AND** the open **All** notification dropdown menu **together in one single screenshot**.\n🔗 **Link Channel:** ${CHANNEL_URL}`;
     }
 }
 
@@ -111,7 +112,7 @@ client.on('messageCreate', async message => {
 
             } catch (err) {
                 console.error('OCR Processing Error:', err);
-                await processingMsg.edit(`❌ An error occurred while processing your image. Please ensure it's a clear image showing your subscription and bell icon menu, and try again.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
+                await processingMsg.edit(`❌ An error occurred while processing your image. Please ensure it's a clear image showing your handle and bell icon menu together, and try again.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
             }
         }
     }
