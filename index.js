@@ -29,7 +29,7 @@ client.on('clientReady', async () => {
             const guideEmbed = new EmbedBuilder()
                 .setColor('#0099ff')
                 .setTitle('🛡️ Pro Gaming Vault - Official Verification Guide')
-                .setDescription(`Welcome to the server! To unlock the script portal channels and access our daily releases, you must verify your subscription to our official channel.\n\n**📋 Steps to Verify:**\n1. Go to our official channel: [Click Here to Open Channel](${CHANNEL_URL})\n2. Click **Subscribe**.\n3. Click the **Bell Icon** and select **"All"**.\n4. Take a clear screenshot showing the open **All** notification bell dropdown menu.\n5. Drop your screenshot right here in this channel!`)
+                .setDescription(`Welcome to the server! To unlock the script portal channels and access our daily releases, you must verify your subscription to our official channel.\n\n**📋 Steps to Verify:**\n1. Go to our official channel: [Click Here to Open Channel](${CHANNEL_URL})\n2. Click **Subscribe**.\n3. Click the **Bell Icon** and select **"All"**.\n4. Take a clear screenshot showing our channel name along with the open **All** notification bell dropdown menu.\n5. Drop your screenshot right here in this channel!`)
                 .setImage('https://cdn.discordapp.com/attachments/1537214914844688425/1548839495166861434/WhatsApp_Image_2026-09-13_at_4.30.08_PM.jpeg?ex=6aa884af&is=6aa7332f&hm=02a68f65eb1466d374e64d93a02e7d58c7c66c501c21fdcfbb4c16e7bf043a70') 
                 .setFooter({ text: 'Our 24/7 AI Security Bot will automatically verify and grant your role within seconds!' });
 
@@ -56,12 +56,12 @@ client.on('messageCreate', async message => {
         }
     }
 
-    // 2. Automated 24/7 OCR Screenshot Verification Gate (Optimized for mobile blur background)
+    // 2. Automated 24/7 OCR Screenshot Verification Gate (Secure + Mobile Friendly)
     if (message.channel.id === VERIFY_CHANNEL_ID) {
         if (message.attachments.size > 0) {
             const attachment = message.attachments.first();
             
-            const processingMsg = await message.reply('🔄 Scanning your screenshot via 24/7 AI Security (Checking Subscribed & Bell All)... Please wait.');
+            const processingMsg = await message.reply('🔄 Scanning your screenshot via 24/7 AI Security (Checking Channel & Bell All)... Please wait.');
 
             try {
                 // Download and run OCR on the image
@@ -71,12 +71,12 @@ client.on('messageCreate', async message => {
 
                 const lowerText = text.toLowerCase();
                 
-                // Flexible validation to handle mobile blurred background:
-                // Checks only for 'subscribed' and 'all' keywords
-                const hasSubscribed = lowerText.includes('subscribed');
+                // Smart Secure Validation:
+                // Checks for your channel handle/name AND the bell 'All' menu (Ignoring blurred background 'subscribed' text)
+                const hasCorrectChannel = lowerText.includes('progamingvault') || lowerText.includes('e2k');
                 const hasBellAll = lowerText.includes('all');
 
-                if (hasSubscribed && hasBellAll) {
+                if (hasCorrectChannel && hasBellAll) {
                     const member = await message.guild.members.fetch(message.author.id);
                     await member.roles.add(VERIFIED_ROLE_ID);
 
@@ -84,12 +84,12 @@ client.on('messageCreate', async message => {
                     
                     await member.send(`🎉 Your subscription and notification settings for **Pro Gaming Vault** have been automatically verified! You can now access daily scripts here: ${ROBLOX_SCRIPTS_INVITE}`).catch(() => {});
                 } else {
-                    await processingMsg.edit(`❌ Verification Failed! Please make sure your screenshot clearly shows the **Subscribed** status and the open **All** notification bell dropdown menu.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
+                    await processingMsg.edit(`❌ Verification Failed! Please ensure your screenshot shows **our channel (@ProGamingVault-e2k)** along with the open **All** notification bell menu.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
                 }
 
             } catch (err) {
                 console.error('OCR Processing Error:', err);
-                await processingMsg.edit(`❌ An error occurred while processing your image. Please ensure it's a clear screenshot of your notification settings and try again.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
+                await processingMsg.edit(`❌ An error occurred while processing your image. Please ensure it's a clear screenshot showing our channel and notification settings, then try again.\n🔗 **Channel Link:** ${CHANNEL_URL}`);
             }
         }
     }
